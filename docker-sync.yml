@@ -1,0 +1,13 @@
+version: '2'
+
+options:
+  verbose: true
+syncs:
+  web_server_sync:
+    src: "${SITE_PATH}"
+    sync_userid: '1000'
+    sync_strategy: 'unison'
+  php_sync:
+    src: "${SITE_PATH}"
+    sync_userid: '1000'
+    sync_strategy: 'unison'

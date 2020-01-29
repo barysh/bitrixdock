@@ -1,0 +1,63 @@
+version: '2'
+
+services:
+    php:
+        build: ./${PHP_VERSION}
+        container_name: php
+        volumes:
+            - ./logs/php:/var/log/php
+            - ${SITE_PATH}:/var/www/bitrix
+        environment:
+              PHP_IDE_CONFIG: "serverName=Docker"
+        ports:
+            - '${INTERFACE}:9000:9000'
+        links:
+            - mysql
+            - memcached
+        restart: always
+    web_server:
+        build: ./${WEB_SERVER_TYPE}
+        container_name: webserver
+        volumes:
+            - ./logs/${WEB_SERVER_TYPE}:/var/log/${WEB_SERVER_TYPE}
+            - ${SITE_PATH}:/var/www/bitrix
+        ports:
+            - '${INTERFACE}:80:80'
+            - '${INTERFACE}:81:81'
+            - '${INTERFACE}:443:443'
+        links:
+            - php
+        restart: always
+    mysql:
+        build: ./mysql
+        container_name: mysql
+        volumes:
+            - ./logs/mysql:/var/log/mysql
+            - ./data/mysql:/var/lib/mysql
+        ports:
+            - '${INTERFACE}:3307:3307'
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+        restart: always
+    memcached:
+        image: memcached:1.5-alpine
+        container_name: memcached
+        volumes:
+            - ./logs/memcached:/var/log/memcached
+            - ./data/memcached:/var/lib/memcached
+        ports:
+            - '${INTERFACE}:11211:11211'
+        restart: always
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links: 
+            - mysql:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

@@ -1,0 +1,13 @@
+version: '2'
+services:
+  web_server:
+    volumes:
+      - web_server_sync:/var/www/bitrix:nocopy # nocopy is important
+  php:
+    volumes:
+      - php_sync:/var/www/bitrix:nocopy # nocopy is important
+volumes:
+  web_server_sync:
+    external: true
+  php_sync:
+    external: true
