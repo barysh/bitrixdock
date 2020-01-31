@@ -12,8 +12,7 @@ services:
         ports:
             - '${INTERFACE}:9000:9000'
         links:
-            - mysql
-            - memcached
+            - mariadb
         restart: always
     web_server:
         build: ./${WEB_SERVER_TYPE}
@@ -28,12 +27,19 @@ services:
         links:
             - php
         restart: always
-    mysql:
-        build: ./mysql
-        container_name: mysql
-        volumes:
-            - ./logs/mysql:/var/log/mysql
-            - ./data/mysql:/var/lib/mysql
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links: 
+            - mariadb:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    mariadb:
+        image: "mariadb:10.1.38"
+        restart: "on-failure:5"
         ports:
             - '${INTERFACE}:3307:3307'
         environment:
@@ -41,23 +47,7 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
-        restart: always
-    memcached:
-        image: memcached:1.5-alpine
-        container_name: memcached
         volumes:
-            - ./logs/memcached:/var/log/memcached
-            - ./data/memcached:/var/lib/memcached
-        ports:
-            - '${INTERFACE}:11211:11211'
-        restart: always
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        links: 
-            - mysql:db
-        ports:
-            - 8000:80
-        environment:
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            - ./logs/mysql:/var/log/mysql
+            - ./data/mysql:/var/lib/mysql
+            - ./mysql/db.cnf:/etc/mysql/conf.d/db.cnf

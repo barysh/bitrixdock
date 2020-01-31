@@ -6,3 +6,4 @@
 /www/bitrix/*
 !/www/bitrix/bitrixsetup.php
 !/www/bitrix/restore.php
+!/www/bitrix/bitrix
