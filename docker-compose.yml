@@ -12,7 +12,7 @@ services:
         ports:
             - '${INTERFACE}:9000:9000'
         links:
-            - mariadb
+            - mysql
         restart: always
     web_server:
         build: ./${WEB_SERVER_TYPE}
@@ -30,16 +30,20 @@ services:
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         links: 
-            - mariadb:db
+            - mysql:db
         ports:
             - 8000:80
         environment:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    mariadb:
-        image: "mariadb:10.1.38"
-        restart: "on-failure:5"
+    mysql:
+        build: ./mysql
+        container_name: mysql
+        volumes:
+            - ./logs/mysql:/var/log/mysql
+            - ./data/mysql:/var/lib/mysql
+            - ./mysql/db.cnf:/etc/mysql/conf.d/db.cnf
         ports:
             - '${INTERFACE}:3307:3307'
         environment:
@@ -47,7 +51,4 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
-        volumes:
-            - ./logs/mysql:/var/log/mysql
-            - ./data/mysql:/var/lib/mysql
-            - ./mysql/db.cnf:/etc/mysql/conf.d/db.cnf
+        restart: always

@@ -1,20 +1,9 @@
 [mysqld]
 default-time-zone="+03:00"
-sql_mode=
-
-innodb_buffer_pool_size=2GB
-innodb_additional_mem_pool_size=50M 
-innodb_file_io_threads=8 
-innodb_lock_wait_timeout=50 
-innodb_log_buffer_size=8M 
-innodb_flush_log_at_trx_commit=0
-key_buffer_size=16M 
-sort_buffer=8M 
-read_buffer_size=16M
-innodb_additional_mem_pool_size=20M
-innodb_log_file_size=100M 
-innodb_log_buffer_size=16M
-tmp_table_size = 64M
-max_heap_table_size = 64M
-wait_timeout = 15
-interactive_timeout = 15
+innodb_file_per_table=1
+innodb_flush_log_at_trx_commit=2
+sync_binlog=0
+innodb_flush_method=O_DIRECT
+transaction-isolation=READ-COMMITTED
+binlog_cache_size=0
+sql_mode=""
