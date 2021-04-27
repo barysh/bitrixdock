@@ -2,7 +2,7 @@
 /* Ansible managed */
 define("DBPersistent", false);
 $DBType = "mysql";
-$DBHost = "mariadb";
+$DBHost = "mysql";
 $DBLogin = "bitrix";
 $DBPassword = '123';
 $DBName = "bitrix";

@@ -44,7 +44,7 @@ return array (
       'default' => 
       array (
         'className' => '\\Bitrix\\Main\\DB\\MysqliConnection',
-        'host' => 'mariadb',
+        'host' => 'mysql',
         'database' => 'bitrix',
         'login' => 'bitrix',
         'password' => '123',
